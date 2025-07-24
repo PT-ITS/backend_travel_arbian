@@ -19,10 +19,9 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->enum('level',[
-                '0', // super admin
-                '1', // divisi
-                '2' // manager
+            $table->enum('level', [
+                '0', // admin
+                '1', // driver
             ])->default('0');
             $table->text('active_token')->nullable();
             $table->rememberToken();

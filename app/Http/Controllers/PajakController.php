@@ -8,19 +8,56 @@ use Illuminate\Support\Facades\Storage;
 
 class PajakController extends Controller
 {
+    public function detailPajak($id)
+    {
+        try {
+            $dataPajak = Pajak::find($id);
+
+            if ($dataPajak) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataPajak,
+                    'message' => 'Data pajak berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data pajak'
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
     public function listPajak()
     {
         try {
             $dataPajak = Pajak::all();
 
-            return response()->json([
-                'id' => '1',
-                'data' => $dataPajak
-            ]);
+            if ($dataPajak) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataPajak,
+                    'message' => 'Data pajak berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data pajak'
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal mengambil data pajak.'
+                'data' => [],
+                'message' => $th->getMessage()
             ]);
         }
     }
@@ -45,13 +82,25 @@ class PajakController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data pajak berhasil ditambahkan.'
+                'data' => $validateData,
+                'message' => 'Data pajak berhasil ditambahkan.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menambahkan data pajak.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menambahkan data pajak.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -61,10 +110,10 @@ class PajakController extends Controller
             $pajak = Pajak::findOrFail($id);
 
             $validateData = $request->validate([
-                'tanggal_pajak' => 'sometimes|required|date',
-                'jenis_pajak' => 'sometimes|required|string',
-                'lokasi_samsat' => 'sometimes|required|string',
-                'biaya' => 'sometimes|required|numeric',
+                'tanggal_pajak' => 'required|date',
+                'jenis_pajak' => 'required|string',
+                'lokasi_samsat' => 'required|string',
+                'biaya' => 'required|numeric',
                 'nota' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
                 'fk_id_mobil' => 'sometimes|required|integer',
                 'fk_id_pj' => 'sometimes|required|integer',
@@ -83,13 +132,25 @@ class PajakController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data pajak berhasil diperbarui.'
+                'data' => $validateData,
+                'message' => 'Data pajak berhasil diperbarui.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal memperbarui data pajak.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat memperbarui data pajak.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -106,13 +167,18 @@ class PajakController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data pajak berhasil dihapus.'
+                'data' => [],
+                'message' => 'Data pajak berhasil dihapus.'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menghapus data pajak.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menghapus data pajak.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 }

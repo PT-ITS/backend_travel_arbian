@@ -18,4 +18,9 @@ class Driver extends Model
         'foto',
         'fk_id_user',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'fk_id_user');
+    }
 }

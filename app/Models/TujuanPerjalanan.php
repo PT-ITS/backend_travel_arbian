@@ -13,4 +13,14 @@ class TujuanPerjalanan extends Model
         'fk_id_perjalanan',
         'fk_id_tujuan',
     ];
+
+    public function perjalanan()
+    {
+        return $this->belongsTo(Perjalanan::class, 'fk_id_perjalanan');
+    }
+
+    public function tujuan()
+    {
+        return $this->belongsTo(Tujuan::class, 'fk_id_tujuan');
+    }
 }

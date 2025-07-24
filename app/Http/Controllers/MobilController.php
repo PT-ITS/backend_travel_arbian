@@ -8,19 +8,56 @@ use App\Models\Mobil;
 
 class MobilController extends Controller
 {
+    public function detailMobile($id)
+    {
+        try {
+            $dataMobil = Mobil::find($id);
+
+            if ($dataMobil) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataMobil,
+                    'message' => 'Data mobil berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data mobil'
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
     public function listMobile()
     {
         try {
             $dataMobil = Mobil::all();
 
-            return response()->json([
-                'id' => '1',
-                'data' => $dataMobil
-            ]);
+            if ($dataMobil) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataMobil,
+                    'message' => 'Data mobil berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data mobil'
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal mengambil data mobil.'
+                'data' => [],
+                'message' => $th->getMessage()
             ]);
         }
     }
@@ -44,19 +81,22 @@ class MobilController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data mobil berhasil ditambahkan.'
+                'data' => $validateData,
+                'message' => 'Data mobil berhasil ditambahkan.'
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Validasi gagal.',
+                'data' => [],
+                'message' => 'Validasi gagal.',
                 'errors' => $e->errors()
             ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Terjadi kesalahan saat menambahkan data mobil.',
-                'message' => $th->getMessage(),
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menambahkan data mobil.',
+                'errors' => $th->getMessage(),
                 'file' => $th->getFile(),
                 'line' => $th->getLine()
             ], 500);
@@ -70,12 +110,12 @@ class MobilController extends Controller
             $mobil = Mobil::findOrFail($id);
 
             $validateData = $request->validate([
-                'jenis' => 'sometimes|required|string',
-                'merk' => 'sometimes|required|string',
-                'kapasitas' => 'sometimes|required|integer',
-                'nopol' => 'sometimes|required|string',
+                'jenis' => 'required|string',
+                'merk' => 'required|string',
+                'kapasitas' => 'required|integer',
+                'nopol' => 'required|string',
                 'foto' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
-                // 'fk_id_driver' => 'sometimes|required|integer',
+                // 'fk_id_driver' => 'required|integer',
             ]);
 
             if ($request->hasFile('foto')) {
@@ -91,13 +131,25 @@ class MobilController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data mobil berhasil diperbarui.'
+                'data' => $validateData,
+                'message' => 'Data mobil berhasil diperbarui.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal memperbarui data mobil.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat memperbarui data mobil.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -114,13 +166,18 @@ class MobilController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data mobil berhasil dihapus.'
+                'data' => [],
+                'message' => 'Data mobil berhasil dihapus.'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menghapus data mobil.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menghapus data mobil.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 }

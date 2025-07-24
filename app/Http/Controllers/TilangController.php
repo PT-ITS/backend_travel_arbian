@@ -7,19 +7,56 @@ use Illuminate\Http\Request;
 
 class TilangController extends Controller
 {
+    public function detailTilang($id)
+    {
+        try {
+            $dataTilang = Tilang::find($id);
+
+            if ($dataTilang) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataTilang,
+                    'message' => 'Data tilang berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data tilang'
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
     public function listTilang()
     {
         try {
             $dataTilang = Tilang::all();
 
-            return response()->json([
-                'id' => '1',
-                'data' => $dataTilang
-            ]);
+            if ($dataTilang) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataTilang,
+                    'message' => 'Data tilang berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data tilang'
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal mengambil data tilang.'
+                'data' => [],
+                'message' => $th->getMessage()
             ]);
         }
     }
@@ -40,13 +77,25 @@ class TilangController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data tilang berhasil ditambahkan.'
+                'data' => $validateData,
+                'message' => 'Data tilang berhasil ditambahkan.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menambahkan data tilang.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menambahkan data tilang.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -56,10 +105,10 @@ class TilangController extends Controller
             $tilang = Tilang::findOrFail($id);
 
             $validateData = $request->validate([
-                'tanggal_tilang' => 'sometimes|required|date',
-                'jenis_pelanggaran' => 'sometimes|required|string',
-                'keterangan' => 'sometimes|required|string',
-                'lokasi' => 'sometimes|required|string',
+                'tanggal_tilang' => 'required|date',
+                'jenis_pelanggaran' => 'required|string',
+                'keterangan' => 'required|string',
+                'lokasi' => 'required|string',
                 'fk_id_mobil' => 'sometimes|required|integer',
                 'fk_id_pj' => 'sometimes|required|integer',
             ]);
@@ -68,13 +117,25 @@ class TilangController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data tilang berhasil diperbarui.'
+                'data' => $validateData,
+                'message' => 'Data tilang berhasil diperbarui.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal memperbarui data tilang.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat memperbarui data tilang.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -86,13 +147,18 @@ class TilangController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data tilang berhasil dihapus.'
+                'data' => [],
+                'message' => 'Data tilang berhasil dihapus.'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menghapus data tilang.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menghapus data tilang.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 }

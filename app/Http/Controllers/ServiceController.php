@@ -8,19 +8,56 @@ use App\Models\Service;
 
 class ServiceController extends Controller
 {
+    public function detailService($id)
+    {
+        try {
+            $dataService = Service::find($id);
+
+            if ($dataService) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataService,
+                    'message' => 'Data service berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data service'
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
     public function listService()
     {
         try {
             $dataService = Service::all();
 
-            return response()->json([
-                'id' => '1',
-                'data' => $dataService
-            ]);
+            if ($dataService) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataService,
+                    'message' => 'Data service berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data service'
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal mengambil data service.'
+                'data' => [],
+                'message' => $th->getMessage()
             ]);
         }
     }
@@ -46,13 +83,25 @@ class ServiceController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data service berhasil ditambahkan.'
+                'data' => $validateData,
+                'message' => 'Data service berhasil ditambahkan.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menambahkan data service.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menambahkan data service.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -62,10 +111,10 @@ class ServiceController extends Controller
             $service = Service::findOrFail($id);
 
             $validateData = $request->validate([
-                'tanggal_ganti_service' => 'sometimes|required|date',
-                'keterangan' => 'sometimes|required|string',
-                'bengkel' => 'sometimes|required|string',
-                'harga' => 'sometimes|required|numeric',
+                'tanggal_ganti_service' => 'required|date',
+                'keterangan' => 'required|string',
+                'bengkel' => 'required|string',
+                'harga' => 'required|numeric',
                 'nota' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
                 'fk_id_mobil' => 'sometimes|required|integer',
                 'fk_id_pj' => 'sometimes|required|integer',
@@ -84,13 +133,25 @@ class ServiceController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data service berhasil diperbarui.'
+                'data' => $validateData,
+                'message' => 'Data service berhasil diperbarui.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal memperbarui data service.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat memperbarui data service.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -107,13 +168,18 @@ class ServiceController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data service berhasil dihapus.'
+                'data' => [],
+                'message' => 'Data service berhasil dihapus.'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menghapus data service.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menghapus data service.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 }

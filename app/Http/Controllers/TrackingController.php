@@ -8,19 +8,56 @@ use Illuminate\Support\Facades\Storage;
 
 class TrackingController extends Controller
 {
+    public function detailTracking($id)
+    {
+        try {
+            $dataTracking = Tracking::find($id);
+
+            if ($dataTracking) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataTracking,
+                    'message' => 'Data tracking berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data tracking'
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
     public function listTracking()
     {
         try {
             $dataTracking = Tracking::all();
 
-            return response()->json([
-                'id' => '1',
-                'data' => $dataTracking
-            ]);
+            if ($dataTracking) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataTracking,
+                    'message' => 'Data tracking berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data tracking'
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal mengambil data Tracking.'
+                'data' => [],
+                'message' => $th->getMessage()
             ]);
         }
     }
@@ -37,13 +74,25 @@ class TrackingController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data Tracking berhasil ditambahkan.'
+                'data' => $validateData,
+                'message' => 'Data tracking berhasil ditambahkan.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menambahkan data Tracking.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menambahkan data tracking.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -53,7 +102,7 @@ class TrackingController extends Controller
             $Tracking = Tracking::findOrFail($id);
 
             $validateData = $request->validate([
-                'koordinat' => 'sometimes|required|string',
+                'koordinat' => 'required|string',
                 'fk_id_mobil' => 'sometimes|required|integer',
             ]);
 
@@ -61,13 +110,25 @@ class TrackingController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data Tracking berhasil diperbarui.'
+                'data' => $validateData,
+                'message' => 'Data tracking berhasil diperbarui.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal memperbarui data Tracking.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat memperbarui data tracking.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -79,13 +140,18 @@ class TrackingController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data Tracking berhasil dihapus.'
+                'data' => [],
+                'message' => 'Data tracking berhasil dihapus.'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menghapus data Tracking.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menghapus data tracking.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 }

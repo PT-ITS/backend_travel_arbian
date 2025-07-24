@@ -8,19 +8,56 @@ use Illuminate\Support\Facades\Storage;
 
 class TujuanController extends Controller
 {
-        public function listTujuan()
+    public function detailTujuan($id)
+    {
+        try {
+            $dataTujuan = Tujuan::find($id);
+
+            if ($dataTujuan) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataTujuan,
+                    'message' => 'Data tujuan berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data tujuan'
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function listTujuan()
     {
         try {
             $dataTujuan = Tujuan::all();
 
-            return response()->json([
-                'id' => '1',
-                'data' => $dataTujuan
-            ]);
+            if ($dataTujuan) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataTujuan,
+                    'message' => 'Data tujuan berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data tujuan'
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal mengambil data tujuan.'
+                'data' => [],
+                'message' => $th->getMessage()
             ]);
         }
     }
@@ -30,7 +67,7 @@ class TujuanController extends Controller
         try {
             $validateData = $request->validate([
                 'kota' => 'required|string',
-                'kecaatan' => 'required|string',
+                'kecamatan' => 'required|string',
                 'tarif' => 'required|integer',
             ]);
 
@@ -38,13 +75,25 @@ class TujuanController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data tujuan berhasil ditambahkan.'
+                'data' => $validateData,
+                'message' => 'Data tujuan berhasil ditambahkan.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menambahkan data tujuan.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menambahkan data tujuan.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -54,22 +103,34 @@ class TujuanController extends Controller
             $tujuan = Tujuan::findOrFail($id);
 
             $validateData = $request->validate([
-                'kota' => 'sometimes|required|string',
-                'kecaatan' => 'sometimes|required|string',
-                'tarif' => 'sometimes|required|integer',
+                'kota' => 'required|string',
+                'kecamatan' => 'required|string',
+                'tarif' => 'required|integer',
             ]);
 
             $tujuan->update($validateData);
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data tujuan berhasil diperbarui.'
+                'data' => $validateData,
+                'message' => 'Data tujuan berhasil diperbarui.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal memperbarui data tujuan.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat memperbarui data tujuan.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -81,13 +142,18 @@ class TujuanController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data tujuan berhasil dihapus.'
+                'data' => [],
+                'message' => 'Data tujuan berhasil dihapus.'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menghapus data tujuan.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menghapus data tujuan.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 }

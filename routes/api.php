@@ -43,6 +43,7 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
+    Route::get('/detail/{id}', [MobilController::class, 'detailMobile']);
     Route::get('/list', [MobilController::class, 'listMobile']);
     Route::post('/create', [MobilController::class, 'createMobile']);
     Route::post('/update/{id}', [MobilController::class, 'updateMobile']);
@@ -56,6 +57,7 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
+    Route::get('/detail/{id}', [PajakController::class, 'detailPajak']);
     Route::get('/list', [PajakController::class, 'listPajak']);
     Route::post('/create', [PajakController::class, 'createPajak']);
     Route::post('/update/{id}', [PajakController::class, 'updatePajak']);
@@ -69,6 +71,7 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
+    Route::get('/detail/{id}', [TilangController::class, 'detailTilang']);
     Route::get('/list', [TilangController::class, 'listTilang']);
     Route::post('/create', [TilangController::class, 'createTilang']);
     Route::post('/update/{id}', [TilangController::class, 'updateTilang']);
@@ -82,6 +85,7 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
+    Route::get('/detail/{id}', [ServiceController::class, 'detailService']);
     Route::get('/list', [ServiceController::class, 'listService']);
     Route::post('/create', [ServiceController::class, 'createService']);
     Route::post('/update/{id}', [ServiceController::class, 'updateService']);
@@ -95,6 +99,7 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
+    Route::get('/detail/{id}', [DriverController::class, 'detailDriver']);
     Route::get('/list', [DriverController::class, 'listDriver']);
     Route::post('/create', [DriverController::class, 'createDriver']);
     Route::post('/update/{id}', [DriverController::class, 'updateDriver']);
@@ -109,6 +114,7 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
+    Route::get('/detail/{id}', [OliController::class, 'detailOli']);
     Route::get('/list', [OliController::class, 'listOli']);
     Route::post('/create', [OliController::class, 'createOli']);
     Route::post('/update/{id}', [OliController::class, 'updateOli']);
@@ -122,6 +128,7 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
+    Route::get('/detail/{id}', [PerjalananController::class, 'detailPerjalanan']);
     Route::get('/list', [PerjalananController::class, 'listPerjalanan']);
     Route::post('/create', [PerjalananController::class, 'createPerjalanan']);
     Route::post('/update/{id}', [PerjalananController::class, 'updatePerjalanan']);
@@ -135,6 +142,7 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
+    Route::get('/detail/{id}', [TrackingController::class, 'detailTracking']);
     Route::get('/list', [TrackingController::class, 'listTracking']);
     Route::post('/create', [TrackingController::class, 'createTracking']);
     Route::post('/update/{id}', [TrackingController::class, 'updateTracking']);
@@ -148,6 +156,7 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
+    Route::get('/detail/{id}', [TujuanController::class, 'detailTujuan']);
     Route::get('/list', [TujuanController::class, 'listTujuan']);
     Route::post('/create', [TujuanController::class, 'createTujuan']);
     Route::post('/update/{id}', [TujuanController::class, 'updateTujuan']);
@@ -161,9 +170,13 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
+    Route::get('/detail/{id}', [TujuanPerjalananController::class, 'detailTujuanPerjalanan']);
     Route::get('/list', [TujuanPerjalananController::class, 'listTujuanPerjalanan']);
     Route::post('/create', [TujuanPerjalananController::class, 'createTujuanPerjalanan']);
     Route::post('/update/{id}', [TujuanPerjalananController::class, 'updateTujuanPerjalanan']);
     Route::delete('/delete/{id}', [TujuanPerjalananController::class, 'deleteTujuanPerjalanan']);
+    Route::post('/create-aio', [TujuanPerjalananController::class, 'createTujuanPerjalananAIO']);
+    Route::post('/update-aio/{id}', [TujuanPerjalananController::class, 'updateTujuanPerjalananAIO']);
+    Route::delete('/delete-aio/{id}', [TujuanPerjalananController::class, 'deleteTujuanPerjalananAIO']);
   });
 });

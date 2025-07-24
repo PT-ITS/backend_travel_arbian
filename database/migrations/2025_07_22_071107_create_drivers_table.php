@@ -18,7 +18,7 @@ class CreateDriversTable extends Migration
             $table->string('nama_lengkap');
             $table->string('alamat');
             $table->integer('umur');
-            $table->integer('nik');
+            $table->string('nik');
             $table->string('sim');
             $table->string('foto');
             $table->foreignId('fk_id_user')->constrained('users')->onDelete('cascade')->onUpdate('cascade');

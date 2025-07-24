@@ -8,19 +8,56 @@ use Illuminate\Support\Facades\Storage;
 
 class OliController extends Controller
 {
-   public function listOli()
+    public function detailOli($id)
+    {
+        try {
+            $dataOli = Oli::find($id);
+
+            if ($dataOli) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataOli,
+                    'message' => 'Data oli berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data oli'
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function listOli()
     {
         try {
             $dataOli = Oli::all();
 
-            return response()->json([
-                'id' => '1',
-                'data' => $dataOli
-            ]);
+            if ($dataOli) {
+                return response()->json([
+                    'id' => '1',
+                    'data' => $dataOli,
+                    'message' => 'Data oli berhasil ditemukan'
+                ]);
+            } else {
+                return response()->json([
+                    'id' => '0',
+                    'data' => [],
+                    'message' => 'Tidak ada data oli'
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal mengambil data Oli.'
+                'data' => [],
+                'message' => $th->getMessage()
             ]);
         }
     }
@@ -46,13 +83,25 @@ class OliController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data Oli berhasil ditambahkan.'
+                'data' => $validateData,
+                'message' => 'Data oli berhasil ditambahkan.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menambahkan data Oli.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menambahkan data oli.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -66,9 +115,9 @@ class OliController extends Controller
                 'kilometer_mobil' => 'required|string',
                 'tanggal_ganti_oli' => 'required|date',
                 'harga' => 'required|numeric',
-                'nota' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-                'fk_id_mobil' => 'required|integer',
-                'fk_id_pj' => 'required|integer',
+                'nota' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
+                'fk_id_mobil' => 'sometimes|required|integer',
+                'fk_id_pj' => 'sometimes|required|integer',
             ]);
 
             if ($request->hasFile('nota')) {
@@ -84,13 +133,25 @@ class OliController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data Oli berhasil diperbarui.'
+                'data' => $validateData,
+                'message' => 'Data oli berhasil diperbarui.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => [],
+                'message' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal memperbarui data Oli.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat memperbarui data oli.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 
@@ -107,13 +168,18 @@ class OliController extends Controller
 
             return response()->json([
                 'id' => '1',
-                'data' => 'Data Oli berhasil dihapus.'
+                'data' => [],
+                'message' => 'Data oli berhasil dihapus.'
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menghapus data Oli.'
-            ]);
+                'data' => [],
+                'message' => 'Terjadi kesalahan saat menghapus data oli.',
+                'errors' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
 }
