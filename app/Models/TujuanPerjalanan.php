@@ -10,7 +10,7 @@ class TujuanPerjalanan extends Model
     use HasFactory;
 
     protected $fillable = [
-        'fk_perjalanan',
-        'fk_tujuan',
+        'fk_id_perjalanan',
+        'fk_id_tujuan',
     ];
 }

@@ -31,10 +31,10 @@ class MobilController extends Controller
             $validateData = $request->validate([
                 'jenis' => 'required|string',
                 'merk' => 'required|string',
-                'kapasitas' => 'required|integer',
-                'nopol' => 'required|string|unique:mobils,nopol',
+                'kapasitas' => 'required|numeric',
+                'nopol' => 'required|string',
                 'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-                'fk_id_driver' => 'required|integer',
+                // 'fk_id_driver' => 'required|integer',
             ]);
 
             $path = $request->file('foto')->store('foto_mobil', 'public');
@@ -46,13 +46,23 @@ class MobilController extends Controller
                 'id' => '1',
                 'data' => 'Data mobil berhasil ditambahkan.'
             ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'id' => '0',
+                'data' => 'Validasi gagal.',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Throwable $th) {
             return response()->json([
                 'id' => '0',
-                'data' => 'Gagal menambahkan data mobil.'
-            ]);
+                'data' => 'Terjadi kesalahan saat menambahkan data mobil.',
+                'message' => $th->getMessage(),
+                'file' => $th->getFile(),
+                'line' => $th->getLine()
+            ], 500);
         }
     }
+
 
     public function updateMobile(Request $request, $id)
     {
@@ -63,9 +73,9 @@ class MobilController extends Controller
                 'jenis' => 'sometimes|required|string',
                 'merk' => 'sometimes|required|string',
                 'kapasitas' => 'sometimes|required|integer',
-                'nopol' => 'sometimes|required|string|unique:mobils,nopol,' . $id,
+                'nopol' => 'sometimes|required|string',
                 'foto' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
-                'fk_id_driver' => 'sometimes|required|integer',
+                // 'fk_id_driver' => 'sometimes|required|integer',
             ]);
 
             if ($request->hasFile('foto')) {

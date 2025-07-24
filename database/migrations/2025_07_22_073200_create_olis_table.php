@@ -21,6 +21,7 @@ class CreateOlisTable extends Migration
             $table->integer('harga');
             $table->string('nota');
             $table->foreignId('fk_id_mobil')->constrained('mobils')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('fk_id_pj')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

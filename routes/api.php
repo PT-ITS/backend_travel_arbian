@@ -6,6 +6,12 @@ use App\Http\Controllers\MobilController;
 use App\Http\Controllers\PajakController;
 use App\Http\Controllers\TilangController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\DriverController;
+use App\Http\Controllers\OliController;
+use App\Http\Controllers\PerjalananController;
+use App\Http\Controllers\TrackingController;
+use App\Http\Controllers\TujuanController;
+use App\Http\Controllers\TujuanPerjalananController;
 
 Route::group([
   'prefix' => 'auth'
@@ -32,7 +38,7 @@ Route::group([
 
 
 Route::group([
-  'prefix' => 'mobile'
+  'prefix' => 'mobil'
 ], function () {
   Route::group([
     'middleware' => 'auth:api',
@@ -76,9 +82,88 @@ Route::group([
   Route::group([
     'middleware' => 'auth:api',
   ], function () {
-    Route::get('/service', [ServiceController::class, 'listService']);
-    Route::post('/service', [ServiceController::class, 'createService']);
-    Route::post('/service/{id}', [ServiceController::class, 'updateService']);
-    Route::delete('/service/{id}', [ServiceController::class, 'deleteService']);
+    Route::get('/list', [ServiceController::class, 'listService']);
+    Route::post('/create', [ServiceController::class, 'createService']);
+    Route::post('/update/{id}', [ServiceController::class, 'updateService']);
+    Route::delete('/delete/{id}', [ServiceController::class, 'deleteService']);
+  });
+});
+
+Route::group([
+  'prefix' => 'driver'
+], function () {
+  Route::group([
+    'middleware' => 'auth:api',
+  ], function () {
+    Route::get('/list', [DriverController::class, 'listDriver']);
+    Route::post('/create', [DriverController::class, 'createDriver']);
+    Route::post('/update/{id}', [DriverController::class, 'updateDriver']);
+    Route::delete('/delete/{id}', [DriverController::class, 'deleteDriver']);
+  });
+});
+
+
+Route::group([
+  'prefix' => 'oli'
+], function () {
+  Route::group([
+    'middleware' => 'auth:api',
+  ], function () {
+    Route::get('/list', [OliController::class, 'listOli']);
+    Route::post('/create', [OliController::class, 'createOli']);
+    Route::post('/update/{id}', [OliController::class, 'updateOli']);
+    Route::delete('/delete/{id}', [OliController::class, 'deleteOli']);
+  });
+});
+
+Route::group([
+  'prefix' => 'perjalanan'
+], function () {
+  Route::group([
+    'middleware' => 'auth:api',
+  ], function () {
+    Route::get('/list', [PerjalananController::class, 'listPerjalanan']);
+    Route::post('/create', [PerjalananController::class, 'createPerjalanan']);
+    Route::post('/update/{id}', [PerjalananController::class, 'updatePerjalanan']);
+    Route::delete('/delete/{id}', [PerjalananController::class, 'deletePerjalanan']);
+  });
+});
+
+Route::group([
+  'prefix' => 'tracking'
+], function () {
+  Route::group([
+    'middleware' => 'auth:api',
+  ], function () {
+    Route::get('/list', [TrackingController::class, 'listTracking']);
+    Route::post('/create', [TrackingController::class, 'createTracking']);
+    Route::post('/update/{id}', [TrackingController::class, 'updateTracking']);
+    Route::delete('/delete/{id}', [TrackingController::class, 'deleteTracking']);
+  });
+});
+
+Route::group([
+  'prefix' => 'tujuan'
+], function () {
+  Route::group([
+    'middleware' => 'auth:api',
+  ], function () {
+    Route::get('/list', [TujuanController::class, 'listTujuan']);
+    Route::post('/create', [TujuanController::class, 'createTujuan']);
+    Route::post('/update/{id}', [TujuanController::class, 'updateTujuan']);
+    Route::delete('/delete/{id}', [TujuanController::class, 'deleteTujuan']);
+  });
+});
+
+Route::group([
+  'prefix' => 'tujuan-perjalanan'
+], function () {
+  Route::group([
+    'middleware' => 'auth:api',
+  ], function () {
+    Route::get('/list', [TujuanPerjalananController::class, 'listTujuanPerjalanan']);
+    Route::post('/create', [TujuanPerjalananController::class, 'createTujuanPerjalanan']);
+    Route::post('/update/{id}', [TujuanPerjalananController::class, 'updateTujuanPerjalanan']);
+    Route::delete('/delete/{id}', [TujuanPerjalananController::class, 'deleteTujuanPerjalanan']);
   });
 });

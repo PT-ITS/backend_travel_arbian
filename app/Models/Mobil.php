@@ -15,6 +15,6 @@ class Mobil extends Model
         'kapasitas',
         'nopol',
         'foto',
-        'fk_id_driver',
+        // 'fk_id_driver',
     ];
 }

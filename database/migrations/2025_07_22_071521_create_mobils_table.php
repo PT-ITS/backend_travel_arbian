@@ -20,7 +20,7 @@ class CreateMobilsTable extends Migration
             $table->string('kapasitas');
             $table->string('nopol');
             $table->string('foto');
-            $table->foreignId('fk_id_driver')->constrained('drivers')->onDelete('cascade')->onUpdate('cascade');
+            // $table->foreignId('fk_id_driver')->constrained('drivers')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

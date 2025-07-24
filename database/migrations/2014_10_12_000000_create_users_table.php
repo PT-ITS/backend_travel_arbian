@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
                 '0', // super admin
                 '1', // divisi
                 '2' // manager
-            ]);
+            ])->default('0');
             $table->text('active_token')->nullable();
             $table->rememberToken();
             $table->timestamps();

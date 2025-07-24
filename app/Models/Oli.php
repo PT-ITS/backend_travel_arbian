@@ -15,6 +15,7 @@ class Oli extends Model
         'tanggal_ganti_oli',
         'harga',
         'nota',
-        'fk_id_mobil'
+        'fk_id_mobil',
+        'fk_id_pj'
     ];
 }
