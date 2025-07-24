@@ -91,6 +91,7 @@ class DriverController extends Controller
             $user = User::create([
                 'name' => $validateData['name'],
                 'email' => $validateData['email'],
+                'level' => '1',
                 'password' => Hash::make($validateData['password']),
             ]);
 
@@ -181,6 +182,7 @@ class DriverController extends Controller
                 $userData = [
                     'name' => $validateData['name'],
                     'email' => $validateData['email'],
+                    'level' => '1',
                     'password' => Hash::make($validateData['password']),
                 ];
 
