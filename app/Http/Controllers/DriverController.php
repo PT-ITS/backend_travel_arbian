@@ -16,7 +16,7 @@ class DriverController extends Controller
     public function detailDriver($id)
     {
         try {
-            $dataDriver = Driver::find($id);
+            $dataDriver = Driver::with(['user'])->find($id);
 
             if ($dataDriver) {
                 return response()->json([
@@ -43,7 +43,7 @@ class DriverController extends Controller
     public function listDriver()
     {
         try {
-            $dataDriver = Driver::all();
+            $dataDriver = Driver::with(['user'])->get();
 
             if ($dataDriver) {
                 return response()->json([
